@@ -40,7 +40,7 @@ router.get('/logout', function(req, res) {
   } else {
     req.session = null;
   }
-  res.send('');
+  res.redirect('/');
 });
 
 module.exports = router;

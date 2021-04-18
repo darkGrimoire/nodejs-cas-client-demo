@@ -5,15 +5,22 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const fs = require('fs');
 var cas = require('connect-cas');
+const https = require('https');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
-cas.configure({ 'host': 'cas-server:8080', 'protocol': 'http',
+const key = fs.readFileSync('./key.pem');
+
+const cert = fs.readFileSync('./cert.pem');
+
+cas.configure({ 'host': 'login.itb.ac.id', 'protocol': 'https',
 paths: {
         validate: '/validate',
-        serviceValidate: '/p3/serviceValidate', // CAS 3.0
+        serviceValidate: '/cas/p3/serviceValidate', // CAS 3.0
         proxyValidate: '/p3/proxyValidate', // CAS 3.0
-        proxy: '/proxy',
-        login: '/login',
+        proxy: '/cas_proxy',
+        login: '/cas/login',
         logout: '/logout'
     }
 });
@@ -21,6 +28,9 @@ paths: {
 var routes = require('./routes/default');
 
 var app = express();
+app.use('/.*', createProxyMiddleware({ target: 'https://localhost.itb.ac.id/', changeOrigin: true }));
+// app.use('/cas_proxy', createProxyMiddleware({ target: 'https://login.itb.ac.id/', changeOrigin: true, pathRewrite: {'^/cas_proxy': '/'} }));
+const server = https.createServer({key: key, cert: cert }, app);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -69,4 +79,4 @@ app.use(function(err, req, res, next) {
 });
 
 
-module.exports = app;
+module.exports = server;

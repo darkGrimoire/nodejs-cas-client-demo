@@ -1,0 +1,11 @@
+
+> nodejs-cas-client-demo@1.0.0 start C:\Users\Faris Rizki Ekananda\Documents\GitHub\nodejs-cas-client-demo
+> node ./bin/www
+
+service validate
+[HPM] Proxy created: /  -> https://localhost.itb.ac.id/
+[HPM] Proxy created: /  -> https://login.itb.ac.id/
+[HPM] Proxy rewrite rule created: "^/cas_proxy" ~> "/"
+listening on 3001
+[0mGET /index [32m200 [0m131.984 ms - 573[0m
+[0mGET /favicon.ico [32m200 [0m2.623 ms - 1150[0m
